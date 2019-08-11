@@ -1,0 +1,39 @@
+#! /usr/bin/env node
+'use strict';
+
+const { execSync } = require('child_process');
+const { difference, filter, into } = require('ramda');
+
+const locals = require('./modules/locals');
+const npm = require('./modules/npm');
+
+npm.guard();
+
+const argv = require('minimist')(process.argv.slice(2));
+const [script, ...args] = argv._;
+const optional = argv.o || argv.optional;
+const recursive = argv.r || argv.recursive;
+const identifier = argv.P || argv.where;
+
+const packages = identifier && recursive
+  ? locals.dependencies(locals.get(identifier), { inclusive: true })
+  : identifier && !recursive
+    ? [locals.get(identifier)]
+    : Array.from(locals);
+
+const callables = into([], filter(pkg =>
+  pkg.run(script, { dry: true })), packages);
+const uncallables = difference(packages, callables);
+const send = res => {
+  process.exit(res ? 0 : 1);
+};
+
+if (argv.hasOwnProperty('dry')) {
+  return send(optional ? callables.length > 0 : uncallables.length === 0);
+} else if (!optional && uncallables.length > 0) {
+  return uncallables[0].scriptNotFound(script);
+} else {
+  for (const pkg of callables) {
+    pkg.run(script, { args });
+  }
+}
