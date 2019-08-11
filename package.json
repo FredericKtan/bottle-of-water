@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/FredericKtan/bottle-of-water#readme",
   "dependencies": {
+    "dotenv": "^8.0.0",
     "ramda": "^0.26.1"
   }
 }
