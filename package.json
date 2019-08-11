@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/FredericKtan/bottle-of-water/issues"
   },
-  "homepage": "https://github.com/FredericKtan/bottle-of-water#readme"
+  "homepage": "https://github.com/FredericKtan/bottle-of-water#readme",
+  "dependencies": {
+    "ramda": "^0.26.1"
+  }
 }
