@@ -1,0 +1,26 @@
+{
+  "name": "bottle-of-water",
+  "version": "0.1.0",
+  "description": "A bottle of water to help you drink water",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "scripts/create-pr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FredericKtan/bottle-of-water.git"
+  },
+  "keywords": [
+    "bottle",
+    "water",
+    "script",
+    "js"
+  ],
+  "author": "Frederic MAMATH",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FredericKtan/bottle-of-water/issues"
+  },
+  "homepage": "https://github.com/FredericKtan/bottle-of-water#readme"
+}
