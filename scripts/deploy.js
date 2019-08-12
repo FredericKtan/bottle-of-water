@@ -15,13 +15,17 @@ const issuesId = compose(map(compose(replace('#', ''), trim)), match(/\s#(.\d*)\
 
 let body = "";
 
-const issuesTitle = [];
+const issues = [];
 
 issuesId.map(id => {
   const issue = execSync(`curl -H "Authorization: token ${process.env.GITHUB_TOKEN}" -H "Content-Type: application/json" https://api.github.com/repos/FredericKtan/bottle-of-water/issues/${id}`, options);
   const jsonParsedIssue = JSON.parse(issue);
 
-  issuesTitle.push(jsonParsedIssue.title);
+  console.log({ jsonParsedIssue });
+  issues.push({
+    title: jsonParsedIssue.title,
+    url: jsonParsedIssue.html_url
+  });
 })
 
 const pullRequest = {
@@ -30,16 +34,16 @@ const pullRequest = {
 };
 console.log(`> Found ${issuesId.length} issues`);
 
-issuesTitle.forEach(title => {
-  pullRequest.body = pullRequest.body + "- " + title + "\\n";
-  console.log('> - ', title);
+issues.forEach(issue => {
+  pullRequest.body = pullRequest.body + "- " + issue.title + "\\n";
+  console.log('> - [', issue.title, '](', issue.url, ')');
 })
 
-const createPullRequest = execSync(`curl -H "Authorization: token ${process.env.GITHUB_TOKEN}" -d  '{"title": "${pullRequest.title}", "body": "${pullRequest.body}", "head": "staging", "base": "master"}' https://api.github.com/repos/fredericktan/bottle-of-water/pulls`, options);
+// const createPullRequest = execSync(`curl -H "Authorization: token ${process.env.GITHUB_TOKEN}" -d  '{"title": "${pullRequest.title}", "body": "${pullRequest.body}", "head": "staging", "base": "master"}' https://api.github.com/repos/fredericktan/bottle-of-water/pulls`, options);
 
-const jsonParsedCreatePullRequest = JSON.parse(createPullRequest);
-if (jsonParsedCreatePullRequest.errors) {
-  console.log('> Create pull request failed...\n', jsonParsedCreatePullRequest.errors);
-} else {
-  console.log(`> Pull request created successfully @ ${jsonParsedCreatePullRequest.html_url} !`);
-}
+// const jsonParsedCreatePullRequest = JSON.parse(createPullRequest);
+// if (jsonParsedCreatePullRequest.errors) {
+//   console.log('> Create pull request failed...\n', jsonParsedCreatePullRequest.errors);
+// } else {
+//   console.log(`> Pull request created successfully @ ${jsonParsedCreatePullRequest.html_url} !`);
+// }
